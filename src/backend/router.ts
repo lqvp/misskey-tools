@@ -162,7 +162,9 @@ router.get('/api(.*)', async (ctx, next) => {
 });
 
 router.get('/announcements/:id', async (ctx) => {
-  const a = await Announcements.findOne(ctx.params.id);
+  const a = await Announcements.findOne({
+		where: { id: Number(ctx.params.id) }
+	});
   const stripped = striptags(md.render(a?.body ?? '').replace(/\n/g, ' '));
   await ctx.render('frontend', a ? {
     t: a.title,
@@ -190,11 +192,13 @@ async function login(ctx: Context, user: Record<string, unknown>, host: string, 
   }
 
   if (isNewcomer) {
-    await updateUser(u.username, u.host, {
-      prevNotesCount: user.notesCount as number ?? 0,
-      prevFollowingCount: user.followingCount as number ?? 0,
-      prevFollowersCount: user.followersCount as number ?? 0,
-    });
+    const sanitizedCounts = {
+      prevNotesCount: typeof user.notesCount === 'number' ? user.notesCount : 0,
+      prevFollowingCount: typeof user.followingCount === 'number' ? user.followingCount : 0,
+      prevFollowersCount: typeof user.followersCount === 'number' ? user.followersCount : 0,
+    };
+
+    await updateUser(u.username, u.host, sanitizedCounts);
   }
 
   await ctx.render('frontend', { token: u.misshaiToken });

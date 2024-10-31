@@ -9,7 +9,7 @@ import { currentTokenVersion } from '../const.js';
 /**
  * IUser インターフェイスに変換します。
  */
-const packUser = (user: User | undefined): IUser | undefined => {
+const packUser = (user: User | null): IUser | undefined => {
   if (!user) return undefined;
   const { username: adminName, host: adminHost } = config.admin;
 
@@ -26,7 +26,9 @@ const packUser = (user: User | undefined): IUser | undefined => {
  * @returns ユーザー
  */
 export const getUser = (username: string, host: string): Promise<IUser | undefined> => {
-  return Users.findOne({ username, host }).then(packUser);
+  return Users.findOne({
+    where: { username, host }
+  }).then(packUser);
 };
 
 /**
@@ -50,7 +52,9 @@ export const updateUsersToolsToken = async (user: User | User['id']): Promise<st
  * @returns ユーザー
  */
 export const getUserByToolsToken = (token: string): Promise<IUser | undefined> => {
-  return Users.findOne({ misshaiToken: token }).then(packUser);
+  return Users.findOne({
+    where: { misshaiToken: token }
+  }).then(packUser);
 };
 
 /**
@@ -76,7 +80,14 @@ export const upsertUser = async (username: string, host: string, token: string):
  * @param record 既存のユーザー情報
  */
 export const updateUser = async (username: string, host: string, record: DeepPartial<User>): Promise<void> => {
-  await Users.update({ username, host }, record);
+  const sanitizedRecord: DeepPartial<User> = {
+    ...record,
+    prevNotesCount: typeof record.prevNotesCount === 'number' ? record.prevNotesCount : 0,
+    prevFollowingCount: typeof record.prevFollowingCount === 'number' ? record.prevFollowingCount : 0,
+    prevFollowersCount: typeof record.prevFollowersCount === 'number' ? record.prevFollowersCount : 0,
+  };
+
+  await Users.update({ username, host }, sanitizedRecord);
 };
 
 /**

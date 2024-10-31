@@ -42,7 +42,9 @@ export class AnnouncementController {
     if (!id || !title || !body) {
       throw new BadRequestError();
     }
-    if (!(await Announcements.findOne(id))) {
+    if (!(await Announcements.findOne({
+			where: { id }
+		}))) {
       throw new NotFoundError();
     }
 
@@ -65,7 +67,9 @@ export class AnnouncementController {
       throw new BadRequestError();
     }
 
-    const announcement = await Announcements.findOne(Number(idNumber));
+    const announcement = await Announcements.findOne({
+			where: { id: idNumber }
+		});
 
     if (!announcement) {
       throw new NotFoundError();
@@ -95,7 +99,9 @@ export class AnnouncementController {
     if (isNaN(idNumber)) {
       throw new NotFoundError();
     }
-    const announcement = await Announcements.findOne(idNumber);
+    const announcement = await Announcements.findOne({
+			where: { id: idNumber }
+		});;
     if (!announcement) {
       throw new NotFoundError();
     }

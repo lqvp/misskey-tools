@@ -1,0 +1,35 @@
+services:
+  app:
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=production
+      - YARN_NETWORK_TIMEOUT=300000
+      - NODE_TLS_REJECT_UNAUTHORIZED=0
+      - TZ=Asia/Tokyo
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./config.json:/app/config.json
+      - ./migration:/app/migration  # マイグレーションファイルのマウントを追加
+    restart: unless-stopped
+    command: sh -c "yarn build:migrations && yarn migration:run && yarn start"  # コマンドを修正
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: tools
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d tools"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

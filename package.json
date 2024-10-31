@@ -23,7 +23,10 @@
 		"tsc": "tsc",
 		"lint": "eslint --ext .ts,.tsx src",
 		"lint:fix": "eslint --fix --ext .ts,.tsx src",
-		"migrate": "ts-node --project ./tsconfig.migration.json ./node_modules/typeorm/cli.js migration:run",
+		"typeorm": "typeorm-ts-node-commonjs",
+		"build:migrations": "tsc -p tsconfig.migrations.json && node rename-migrations.cjs",
+    "migration:run": "yarn build:migrations && typeorm-ts-node-commonjs migration:run -d data-source.cjs",
+		"migrate": "yarn migration:run",
 		"migrate:revert": "ts-node --project ./tsconfig.migration.json ./node_modules/typeorm/cli.js migration:revert"
 	},
 	"dependencies": {
