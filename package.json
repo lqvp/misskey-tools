@@ -3,7 +3,7 @@
 	"version": "3.2.0",
 	"description": "",
 	"main": "built/app.js",
-	"author": "Shrimpia Network",
+	"author": "Shrimpia Network + lqvp",
 	"private": true,
 	"type": "module",
 	"scripts": {

@@ -69,13 +69,13 @@ const AppInner : React.VFC = () => {
         </div>
       ) : <Router />}
       <footer className="text-center pa-5">
-        <p>(C)2020-2023 Shrimpia Network</p>
+			<p>(C)2020-2023 Shrimpia Network | 2024- lqvp</p>
         <p><span dangerouslySetInnerHTML={{__html: t('disclaimerForMisskeyHq')}} /></p>
-        <p>
+        {/* <p>
           <a href="https://xeltica.notion.site/Misskey-Tools-688187fc85de4b7e901055326c7ffe74" target="_blank" rel="noreferrer noopener">
             {t('termsOfService')}
           </a>
-        </p>
+        </p> */}
       </footer>
       <ModalComponent />
     </TheLayout>
