@@ -72,7 +72,7 @@ const AppInner : React.VFC = () => {
 			<p>(C)2020-2023 Shrimpia Network | 2024- lqvp</p>
         <p><span dangerouslySetInnerHTML={{__html: t('disclaimerForMisskeyHq')}} /></p>
         <p>
-          <a href="https://tool.0il.pw/announcements/1" target="_blank" rel="noreferrer noopener">
+          <a href="https://tools.0il.pw/announcements/1" target="_blank" rel="noreferrer noopener">
             {t('termsOfService')}
           </a>
         </p>
