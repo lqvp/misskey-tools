@@ -1,6 +1,6 @@
 services:
   app:
-    build: .
+    image: ghcr.io/lqvp/misskey-tools:master
     ports:
       - "4000:4000"
     environment:
@@ -13,9 +13,11 @@ services:
         condition: service_healthy
     volumes:
       - ./config.json:/app/config.json
-      - ./migration:/app/migration  # マイグレーションファイルのマウントを追加
+      - ./migration:/app/migration
     restart: unless-stopped
-    command: sh -c "yarn build:migrations && yarn migration:run && yarn start"  # コマンドを修正
+    command: sh -c "yarn build:migrations && yarn migration:run && yarn start"
+    networks:
+      - internal_network
 
   db:
     image: postgres:15-alpine
@@ -23,8 +25,6 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: tools
-    ports:
-      - "5432:5432"
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
@@ -33,3 +33,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      internal_network:
+        aliases:
+          - db
+
+networks:
+  internal_network:
+    internal: true
