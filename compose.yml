@@ -17,7 +17,8 @@ services:
     restart: unless-stopped
     command: sh -c "yarn build:migrations && yarn migration:run && yarn start"
     networks:
-      - internal_network
+      - default
+      - db_network
 
   db:
     image: postgres:15-alpine
@@ -34,10 +35,10 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      internal_network:
-        aliases:
-          - db
+      - db_network
 
 networks:
-  internal_network:
+  default:
+    driver: bridge
+  db_network:
     internal: true
