@@ -136,7 +136,7 @@
 	},
 	"_template": {
 		"description": "アラートは、自動的に投稿をカスタマイズする",
-		"description2": "テンプレートに関わらない、ハッシュタグは #misshaialert を自動的に付与します。",
+		"description2": "テンプレートに関わらない、ハッシュタグは #misshaialert #tools-0ilpw を自動的に付与します。",
 		"default": "昨日Misskeyは活動しました\n\nメモ: {notesCount}({notesDelta})\n追従します。 : {followingCount}({followingDelta})\nフォロワー :{followersCount}({followersDelta})\n\nそれはです\n{url}",
 		"insertVariables": "変数を挿入します。",
 		"insertVariablesHelp": "文字列は { } に囲まれたら、変数を呼びます、あなたは特別を持っています。これに含まれるのは、値は自動的に投稿の時間を埋め込す。",

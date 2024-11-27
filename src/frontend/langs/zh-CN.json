@@ -136,7 +136,7 @@
 	},
 	"_template": {
 		"description": "可以定制自动发布警报。",
-		"description2": "无论是什么样子的模板，都会自动分配#misshaialert标签。",
+		"description2": "无论是什么样子的模板，都会自动分配#misshaialert #tools-0ilpw标签。",
 		"default": "昨天在Misskey的活动是\n\n帖子：{notesCount}({notesDelta})\n关注：{followingCount}({followingDelta})\n关注者：{followersCount}({followersDelta})\n\n来源\n{url}",
 		"insertVariables": "変数を挿入する",
 		"insertVariablesHelp": "{ } で囲われた文字列は変数と呼ばれ、特別な意味を持ちます。これを含めると、投稿時に自動的に値が埋め込まれます。",

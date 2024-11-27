@@ -136,7 +136,7 @@
 	},
 	"_template": {
 		"description": "Customize template of your alert.",
-		"description2": "Hashtag '#misshaialert' will be appended regardless of the template.",
+		"description2": "Hashtag '#misshaialert #tools-0ilpw' will be appended regardless of the template.",
 		"default": "My Misskey activity yesterday was:\n\nNotes: {notesCount}({notesDelta})\nFollowing: {followingCount}({followingDelta})\nFollowers: {followersCount}({followersDelta})\n\n{url}",
 		"insertVariables": "Insert variables",
 		"insertVariablesHelp": "The string enclosed in { } is called \"variables\" and has a special meaning. If you include this, it will be automatically replaced to the actual value when alerts created.",

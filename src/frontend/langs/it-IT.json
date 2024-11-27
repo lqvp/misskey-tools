@@ -136,7 +136,7 @@
 	},
 	"_template": {
 		"description": "Puoi personalizzare la pubblicazione automatica degli avvisi.",
-		"description2": "L'hashtag #misshaialert verrà accodato a prescindere dal modello.",
+		"description2": "L'hashtag #misshaialert #tools-0ilpw verrà accodato a prescindere dal modello.",
 		"default": "La mia attività di ieri su Misskey:\n\nNote: {notesCount} ({notesDelta})\nFollowing: {followingCount} ({followingDelta})\nFollower: {followersCount} ({followersDelta})\n\n{url}",
 		"insertVariables": "Inserisci una variabile",
 		"insertVariablesHelp": "Le parole racchiuse in parentesi graffe { } vengono chiamate \"variabili\", si tratta di segnaposto che verranno sostituiti automaticamente col relativo valore.",

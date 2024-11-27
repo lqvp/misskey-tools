@@ -45,5 +45,5 @@ export const format = (user: IUser, count: Count): string => {
   return template.replace(variableRegex, (m, name) => {
     const v = variables[name];
     return !v ? m : typeof v === 'function' ? v(score, user) : v;
-  }) + '\n\n#misshaialert';
+  }) + '\n\n#misshaialert #tools-0ilpw';
 };
