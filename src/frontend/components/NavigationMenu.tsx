@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { CHANGELOG_URL } from '../const';
+import { CHANGELOG_URL, REPO_URL } from '../const';
 import { useGetMetaQuery, useGetSessionQuery } from '../services/session';
 import { setDrawerShown } from '../store/slices/screen';
 
@@ -63,7 +63,12 @@ export const NavigationMenu: React.VFC = () => {
         {meta && (
           <section>
             <a className="item" href={CHANGELOG_URL} onClick={onClickItem}>
+              <i className="icon fas fa-clock-rotate-left"></i>
 							v{meta.version} {t('changelog')}
+            </a>
+            <a className="item" href={REPO_URL} onClick={onClickItem}>
+              <i className="icon fab fa-github"></i>
+              {t('repository')}
             </a>
           </section>
         )}

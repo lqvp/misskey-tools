@@ -14,5 +14,7 @@ export const API_ENDPOINT = `//${location.host}/api/v1/`;
 /** 更新履歴URL */
 export const CHANGELOG_URL = 'https://github.com/lqvp/misskey-tools/blob/master/CHANGELOG.md';
 
+export const REPO_URL = 'https://github.com/lqvp/misskey-tools';
+
 /** ブレークポイント モバイル */
 export const BREAKPOINT_SM = '800px';

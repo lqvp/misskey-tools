@@ -54,6 +54,7 @@
 	"settings": "Settings",
 	"accentColor": "Accent Color",
 	"changelog": "Changelog",
+	"repository": "Repository",
 	"otherSettings": "Other Settings",
 	"_sidebar": {
 		"dashboard": "Dashboard",
