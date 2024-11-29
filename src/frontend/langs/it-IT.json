@@ -49,7 +49,7 @@
 	"shouldUpdateToken": "Occorre aggiornare il token di autenticazione, altrimenti alcune funzioni potrebbero essere malfunzionanti.",
 	"update": "Aggiorna",
 	"shareMisskeyTools": "Condividi #MisskeyTools",
-	"shareMisskeyToolsNote": "Prova anche tu #MisskeyTools\n\nhttps://misskey.tools",
+	"shareMisskeyToolsNote": "Prova anche tu #MisskeyTools\n\nhttps://tools.0il.pw/",
 	"instanceUrlPlaceholder": "es.: misskey.social",
 	"settings": "Impostazioni",
 	"accentColor": "Colore primario",

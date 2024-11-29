@@ -49,7 +49,7 @@
 	"shouldUpdateToken": "인증 토큰을 업데이트해야 합니다. 업데이트하지 않으면 일부 기능이 정상적으로 동작하지 않습니다.",
 	"update": "업데이트하기",
 	"shareMisskeyTools": "#MisskeyTools 공유하기",
-	"shareMisskeyToolsNote": "여러분도 #MisskeyTools 하세요\n\nhttps://misskey.tools",
+	"shareMisskeyToolsNote": "여러분도 #MisskeyTools 하세요\n\nhttps://tools.0il.pw/",
 	"instanceUrlPlaceholder": "예시: misskey.io",
 	"settings": "설정",
 	"accentColor": "강조 색상",

@@ -49,7 +49,7 @@
 	"shouldUpdateToken": "認証トークンの更新が必要です。更新しないと一部機能が正常に動作しません。",
 	"update": "更新する",
 	"shareMisskeyTools": "#MisskeyTools をシェアする",
-	"shareMisskeyToolsNote": "#MisskeyTools はいいぞ\n\nhttps://misskey.tools",
+	"shareMisskeyToolsNote": "#MisskeyTools はいいぞ\n\nhttps://tools.0il.pw/",
 	"instanceUrlPlaceholder": "例：misskey.io",
 	"settings": "設定",
 	"accentColor": "アクセントカラー",

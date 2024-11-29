@@ -49,7 +49,7 @@
 	"shouldUpdateToken": "Please update your authentication token, or some functions will not work properly.",
 	"update": "Update",
 	"shareMisskeyTools": "Share #MisskeyTools",
-	"shareMisskeyToolsNote": "Try #MisskeyTools !\n\nhttps://misskey.tools",
+	"shareMisskeyToolsNote": "Try #MisskeyTools !\n\nhttps://tools.0il.pw/",
 	"instanceUrlPlaceholder": "e.g. misskey.io",
 	"settings": "Settings",
 	"accentColor": "Accent Color",
