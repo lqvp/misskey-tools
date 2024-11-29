@@ -65,6 +65,7 @@ export const MisshaiPage: React.VFC = () => {
   const templateTextarea = useRef<HTMLTextAreaElement>(null);
 
   const availableVisibilities: Visibility[] = [
+    'public',
     'home',
     'followers'
   ];
