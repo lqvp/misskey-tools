@@ -29,8 +29,6 @@ export const misskeyAppInfo = {
     'read:mutes',
     'write:mutes',
     'write:notes',
-    'read:drive',
-    'write:drive',
     'read:notifications',
     'write:notifications',
     'read:reactions',
