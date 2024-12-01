@@ -9,7 +9,7 @@ export const entities = [
   User,
   UsedToken,
   Announcement,
-  AdminSettings,
+	AdminSettings,
 ];
 
 /**
