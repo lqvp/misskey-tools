@@ -13,7 +13,7 @@ import { upsertUser, getUser, updateUser } from './functions/users.js';
 import { api } from './services/misskey.js';
 import { die } from './die.js';
 import { misskeyAppInfo } from './const.js';
-import { Announcements } from './models/index.js';
+import { Announcements, AdminSettingsRepo } from './models/index.js';
 import path from 'path';
 import url from 'url';
 
@@ -25,6 +25,32 @@ const sessionHostCache: Record<string, string> = {};
 const tokenSecretCache: Record<string, string> = {};
 
 const md = new MarkdownIt();
+
+const checkRegistrationAllowed = async () => {
+  const settings = await AdminSettingsRepo.findOne({ where: { id: 1 } });
+  if (!settings) return true;
+
+  if (!settings.allowNewUsers) {
+    return false;
+  }
+
+  if (settings.maxNewUsersPerDay > 0) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (!settings.currentDate || settings.currentDate.getTime() < today.getTime()) {
+      settings.currentDate = today;
+      settings.todayUserCount = 0;
+      await AdminSettingsRepo.save(settings);
+    }
+
+    if (settings.todayUserCount >= settings.maxNewUsersPerDay) {
+      return false;
+    }
+  }
+
+  return true;
+};
 
 router.get('/login', async ctx => {
   let host = ctx.query.host as string | undefined;
@@ -120,7 +146,6 @@ router.get('/miauth', async ctx => {
   }
 
   await login(ctx, user, host, token);
-
 });
 
 router.get('/legacy-auth', async ctx => {
@@ -163,8 +188,8 @@ router.get('/api(.*)', async (ctx, next) => {
 
 router.get('/announcements/:id', async (ctx) => {
   const a = await Announcements.findOne({
-		where: { id: Number(ctx.params.id) }
-	});
+    where: { id: Number(ctx.params.id) }
+  });
   const stripped = striptags(md.render(a?.body ?? '').replace(/\n/g, ' '));
   await ctx.render('frontend', a ? {
     t: a.title,
@@ -182,6 +207,22 @@ router.get('(.*)', async (ctx) => {
 
 async function login(ctx: Context, user: Record<string, unknown>, host: string, token: string) {
   const isNewcomer = !(await getUser(user.username as string, host));
+
+  if (isNewcomer) {
+    const canRegister = await checkRegistrationAllowed();
+    if (!canRegister) {
+      await die(ctx, 'registrationDisabled');
+      return;
+    }
+
+    // Increment today's user count
+    const settings = await AdminSettingsRepo.findOne({ where: { id: 1 } });
+    if (settings && settings.maxNewUsersPerDay > 0) {
+      settings.todayUserCount++;
+      await AdminSettingsRepo.save(settings);
+    }
+  }
+
   await upsertUser(user.username as string, host, token);
 
   const u = await getUser(user.username as string, host);

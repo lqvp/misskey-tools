@@ -8,13 +8,19 @@ import { $delete, $get, $post, $put } from '../misc/api';
 import { showModal } from '../store/slices/screen';
 import { useDispatch } from 'react-redux';
 import { useTitle } from '../hooks/useTitle';
-import {Log} from '../../common/types/log';
-import {LogView} from '../components/LogView';
+import { Log } from '../../common/types/log';
+import { LogView } from '../components/LogView';
 
+interface AdminSettings {
+  id: number;
+  allowNewUsers: boolean;
+  maxNewUsersPerDay: number;
+  currentDate: string | null;
+  todayUserCount: number;
+}
 
 export const AdminPage: React.VFC = () => {
   const { data, error } = useGetSessionQuery(undefined);
-
   const dispatch = useDispatch();
 
   useTitle('_sidebar.admin');
@@ -26,6 +32,7 @@ export const AdminPage: React.VFC = () => {
   const [isDeleteMode, setDeleteMode] = useState(false);
   const [draftTitle, setDraftTitle] = useState('');
   const [draftBody, setDraftBody] = useState('');
+  const [settings, setSettings] = useState<AdminSettings | null>(null);
 
   const [misshaiLog, setMisshaiLog] = useState<Log[] | null>(null);
 
@@ -55,6 +62,11 @@ export const AdminPage: React.VFC = () => {
     });
   };
 
+  const fetchSettings = async () => {
+    const response = await $get<AdminSettings>('admin/settings');
+    setSettings(response);
+  };
+
   const fetchAll = () => {
     setAnnouncements([]);
     setAnnouncementsLoaded(false);
@@ -63,6 +75,7 @@ export const AdminPage: React.VFC = () => {
       setAnnouncementsLoaded(true);
     });
     fetchLog();
+    fetchSettings();
   };
 
   const fetchLog = () => {
@@ -85,9 +98,9 @@ export const AdminPage: React.VFC = () => {
   };
 
   /**
-	 * Session APIのエラーハンドリング
-	 * このAPIがエラーを返した = トークンが無効 なのでトークンを削除してログアウトする
-	 */
+   * Session APIのエラーハンドリング
+   * このAPIがエラーを返した = トークンが無効 なのでトークンを削除してログアウトする
+   */
   useEffect(() => {
     if (error) {
       console.error(error);
@@ -97,8 +110,8 @@ export const AdminPage: React.VFC = () => {
   }, [error]);
 
   /**
-	 * Edit Modeがオンのとき、Delete Modeを無効化する（誤操作防止）
-	 */
+   * Edit Modeがオンのとき、Delete Modeを無効化する（誤操作防止）
+   */
   useEffect(() => {
     if (isEditMode) {
       setDeleteMode(false);
@@ -106,8 +119,8 @@ export const AdminPage: React.VFC = () => {
   }, [isEditMode]);
 
   /**
-	 * お知らせ取得
-	 */
+   * お知らせ取得
+   */
   useEffect(() => {
     fetchAll();
   }, []);
@@ -138,6 +151,46 @@ export const AdminPage: React.VFC = () => {
           <>
             <div className="card shadow-2">
               <div className="body">
+                <h1>Registration Settings</h1>
+                <div className="vstack">
+                  <label className="input-check">
+                    <input
+                      type="checkbox"
+                      checked={settings?.allowNewUsers ?? true}
+                      onChange={e => {
+                        $put('admin/settings', {
+                          allowNewUsers: e.target.checked
+                        }).then(fetchSettings);
+                      }}
+                    />
+                    <span>Allow New User Registration</span>
+                  </label>
+
+                  <label className="input-field">
+                    <span>Max New Users Per Day (0 = unlimited)</span>
+                    <input
+                      type="number"
+                      min="0"
+                      value={settings?.maxNewUsersPerDay ?? 0}
+                      onChange={e => {
+                        $put('admin/settings', {
+                          maxNewUsersPerDay: parseInt(e.target.value) || 0
+                        }).then(fetchSettings);
+                      }}
+                    />
+                  </label>
+
+                  {settings && settings.maxNewUsersPerDay > 0 && (
+                    <p className="text-dimmed">
+                      Today's registrations: {settings.todayUserCount} / {settings.maxNewUsersPerDay}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="card shadow-2">
+              <div className="body">
                 <h1>Announcements</h1>
                 {!isEditMode && (
                   <label className="input-switch mb-2">
@@ -166,7 +219,7 @@ export const AdminPage: React.VFC = () => {
                       {!isDeleteMode && (
                         <button className="item fluid" onClick={() => setEditMode(true)}>
                           <i className="icon fas fa-plus" />
-													Create New
+                          Create New
                         </button>
                       )}
                     </div>
@@ -174,32 +227,33 @@ export const AdminPage: React.VFC = () => {
                 ) : (
                   <div className="vstack">
                     <label className="input-field">
-											Title
+                      Title
                       <input type="text" value={draftTitle} onChange={e => setDraftTitle(e.target.value)} />
                     </label>
                     <label className="input-field">
-											Body
+                      Body
                       <textarea className="input-field" value={draftBody} rows={10} onChange={e => setDraftBody(e.target.value)}/>
                     </label>
                     <div className="hstack" style={{justifyContent: 'flex-end'}}>
                       <button className="btn primary" onClick={submitAnnouncement} disabled={!draftTitle || !draftBody}>
-												Submit
+                        Submit
                       </button>
                       <button className="btn" onClick={() => {
                         selectAnnouncement(null);
                         setEditMode(false);
                       }}>
-												Cancel
+                        Cancel
                       </button>
                     </div>
                   </div>
                 )}
               </div>
             </div>
+
             <h2>Misshai</h2>
             <div className="vstack">
               <button className="btn danger" onClick={onClickStartMisshaiAlertWorkerButton}>
-								ミス廃アラートワーカーを強制起動する
+                ミス廃アラートワーカーを強制起動する
               </button>
               <h3>直近のワーカーエラー</h3>
               {misshaiLog && <LogView log={misshaiLog} />}
