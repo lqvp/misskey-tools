@@ -1,6 +1,6 @@
 {
 	"name": "misskey-tools",
-	"version": "3.2.6-lqvp",
+	"version": "3.2.7-lqvp",
 	"description": "",
 	"main": "built/app.js",
 	"author": "Shrimpia Network + lqvp",
