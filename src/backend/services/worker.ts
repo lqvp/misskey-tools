@@ -95,6 +95,7 @@ const sendAlerts = async (host: string, users: User[]) => {
     .map(user => {
       const count = userScoreCache.get(toAcct(user));
       if (count == null) return null;
+      if (count.notesCount - (user.prevNotesCount ?? 0) <= 1) return null;
       return {
         user,
         count,
