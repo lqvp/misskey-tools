@@ -3,11 +3,13 @@ import { config } from '../../config.js';
 import { User } from '../models/entities/user.js';
 import { UsedToken } from '../models/entities/used-token.js';
 import { Announcement } from '../models/entities/announcement.js';
+import { AdminSettings } from '../models/entities/admin-settings.js';
 
 export const entities = [
   User,
   UsedToken,
   Announcement,
+	AdminSettings,
 ];
 
 /**
