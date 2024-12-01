@@ -6,7 +6,7 @@ export const errorCodes = [
   'invalidParamater',
   'notAuthorized',
   'hostNotFound',
-  'registrationDisabled',
+  'invalidHostFormat',
   'other',
 ] as const;
 
