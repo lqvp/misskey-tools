@@ -7,7 +7,6 @@ import {render} from './render.js';
 import {router} from './router.js';
 import {getUserByToolsToken} from './functions/users.js';
 import controllers from './controllers/index.js';
-import { startDailyResetService } from './services/daily-reset.js';
 
 import 'reflect-metadata';
 
@@ -36,9 +35,6 @@ export default (): void => {
 
   app.use(router.routes());
   app.use(router.allowedMethods());
-
-  // Start the daily reset service
-  startDailyResetService();
 
   console.log('GET READY!');
   console.log(`Server URL >> ${config.url}`);
