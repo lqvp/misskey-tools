@@ -104,26 +104,41 @@ const sendAlerts = async (host: string, users: User[]) => {
     })
     .filter(u => u != null) as {user: User, count: Count, message: string}[];
 
-  // 何もしない
   for (const {user, count} of models.filter(m => m.user.alertMode === 'nothing')) {
     await updateScore(user, count);
   }
 
-  // 通知
   for (const {user, count, message} of models.filter(m => m.user.alertMode === 'notification' || m.user.alertMode === 'both')) {
-    await sendNotificationAlert(message, user);
-    if (user.alertMode === 'notification') {
-      await updateScore(user, count);
+    try {
+      await sendNotificationAlert(message, user);
+      if (user.alertMode === 'notification') {
+        await updateScore(user, count);
+      }
+    } catch (e) {
+      if (e instanceof MisskeyError && e.error.code === 'YOUR_ACCOUNT_MOVED') {
+        printLog(`Account ${toAcct(user)} has moved. Discarding the account.`, 'warn');
+        await deleteUser(user.username, user.host);
+      } else {
+        throw e;
+      }
     }
   }
 
-  // アラート
   for (const {user, count, message} of models.filter(m => m.user.alertMode === 'note' || m.user.alertMode === 'both')) {
-    await sendNoteAlert(message, user);
-    await Promise.all([
-      updateScore(user, count),
-      delay(1000),
-    ]);
+    try {
+      await sendNoteAlert(message, user);
+      await Promise.all([
+        updateScore(user, count),
+        delay(1000),
+      ]);
+    } catch (e) {
+      if (e instanceof MisskeyError && e.error.code === 'YOUR_ACCOUNT_MOVED') {
+        printLog(`Account ${toAcct(user)} has moved. Discarding the account.`, 'warn');
+        await deleteUser(user.username, user.host);
+      } else {
+        throw e;
+      }
+    }
   }
 
   printLog(`${host} ユーザー(${users.length}人) へのアラート送信が完了しました。`);
