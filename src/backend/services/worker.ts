@@ -124,22 +124,25 @@ const sendAlerts = async (host: string, users: User[]) => {
     }
   }
 
-  for (const {user, count, message} of models.filter(m => m.user.alertMode === 'note' || m.user.alertMode === 'both')) {
-    try {
-      await sendNoteAlert(message, user);
-      await Promise.all([
-        updateScore(user, count),
-        delay(1000),
-      ]);
-    } catch (e) {
-      if (e instanceof MisskeyError && e.error.code === 'YOUR_ACCOUNT_MOVED') {
-        printLog(`Account ${toAcct(user)} has moved. Discarding the account.`, 'warn');
-        await deleteUser(user.username, user.host);
-      } else {
-        throw e;
-      }
-    }
-  }
+	for (const {user, count, message} of models.filter(m => m.user.alertMode === 'note' || m.user.alertMode === 'both')) {
+		try {
+			await sendNoteAlert(message, user);
+			await Promise.all([
+				updateScore(user, count),
+				delay(1000),
+			]);
+		} catch (e) {
+			if (e instanceof MisskeyError && e.error.code === 'YOUR_ACCOUNT_MOVED') {
+				printLog(`Account ${toAcct(user)} has moved. Discarding the account.`, 'warn');
+				await deleteUser(user.username, user.host);
+			} else if (e instanceof MisskeyError && e.error.code === 'CONTAINS_TOO_MANY_MENTIONS') {
+				printLog(`Account ${toAcct(user)} has too many mentions. Skipping.`, 'warn');
+				continue;
+			} else {
+				throw e;
+			}
+		}
+	}
 
   printLog(`${host} ユーザー(${users.length}人) へのアラート送信が完了しました。`);
 };
