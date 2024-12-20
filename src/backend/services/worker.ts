@@ -19,6 +19,7 @@ const ERROR_CODES_USER_REMOVED = ['NO_SUCH_USER', 'AUTHENTICATION_FAILED', 'YOUR
 
 // TODO: Redisで持つようにしたい
 const userScoreCache = new Map<Acct, Count>();
+const userNoteLogs = new Map<string, number[]>();
 
 export default (): void => {
   cron.schedule('0 0 0 * * *', work);
@@ -82,8 +83,33 @@ const calculateRating = async (host: string, users: User[]) => {
     userScoreCache.set(toAcct(user), miUser);
 
     await updateRating(user, miUser);
+
+    // Log notesCount daily
+    logNotesCount(user.username, miUser.notesCount);
   }
   printLog(`${host} ユーザー(${users.length}人) のレート計算が完了しました。`);
+};
+
+const logNotesCount = (username: string, notesCount: number) => {
+  if (!userNoteLogs.has(username)) {
+    userNoteLogs.set(username, []);
+  }
+  const noteLogs = userNoteLogs.get(username);
+  if (noteLogs) {
+    noteLogs.push(notesCount);
+    if (noteLogs.length > 7) {
+      noteLogs.shift(); // Keep only the last 7 days
+    }
+  }
+};
+
+const checkAndDeleteUser = async (user: User) => {
+  for (const [username, noteLogs] of userNoteLogs.entries()) {
+    if (noteLogs.length === 7 && noteLogs.every((count, index, arr) => index === 0 || count === arr[index - 1] + 1)) {
+      await deleteUser(user.username, user.host);
+      printLog(`User ${username} deleted due to low activity.`);
+    }
+  }
 };
 
 const sendAllAlerts = async (groupedUsers: [string, User[]][]) => {
@@ -124,25 +150,33 @@ const sendAlerts = async (host: string, users: User[]) => {
     }
   }
 
-	for (const {user, count, message} of models.filter(m => m.user.alertMode === 'note' || m.user.alertMode === 'both')) {
-		try {
-			await sendNoteAlert(message, user);
-			await Promise.all([
-				updateScore(user, count),
-				delay(1000),
-			]);
-		} catch (e) {
-			if (e instanceof MisskeyError && e.error.code === 'YOUR_ACCOUNT_MOVED') {
-				printLog(`Account ${toAcct(user)} has moved. Discarding the account.`, 'warn');
-				await deleteUser(user.username, user.host);
-			} else if (e instanceof MisskeyError && e.error.code === 'CONTAINS_TOO_MANY_MENTIONS') {
-				printLog(`Account ${toAcct(user)} has too many mentions. Skipping.`, 'warn');
-				continue;
-			} else {
-				throw e;
-			}
-		}
-	}
+    for (const {user, count, message} of models.filter(m => m.user.alertMode === 'note' || m.user.alertMode === 'both')) {
+        try {
+            await sendNoteAlert(message, user);
+            await Promise.all([
+                updateScore(user, count),
+                delay(1000),
+            ]);
+        } catch (e) {
+            if (e instanceof MisskeyError && e.error.code === 'YOUR_ACCOUNT_MOVED') {
+                printLog(`Account ${toAcct(user)} has moved. Discarding the account.`, 'warn');
+                await deleteUser(user.username, user.host);
+            } else if (e instanceof MisskeyError && e.error.code === 'CONTAINS_TOO_MANY_MENTIONS') {
+                printLog(`Account ${toAcct(user)} has too many mentions. Skipping.`, 'warn');
+                continue;
+            } else {
+                throw e;
+            }
+        }
+    }
 
   printLog(`${host} ユーザー(${users.length}人) へのアラート送信が完了しました。`);
 };
+
+// Schedule the task to check and delete users daily
+cron.schedule('0 0 * * *', async () => {
+  const users = await Users.find();
+  for (const user of users) {
+    await checkAndDeleteUser(user);
+  }
+});
