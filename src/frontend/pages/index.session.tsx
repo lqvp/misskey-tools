@@ -64,15 +64,9 @@ export const IndexSessionPage: React.VFC = () => {
           <h2><i className="fas fa-circle-question"></i> {t('_developerInfo.title')}</h2>
           <p>{t('_developerInfo.description')}</p>
           <div className="menu large">
-            <a className="item" href="//mi.0il.pw/@n" target="_blank" rel="noopener noreferrer">
+            <a className="item" href="https://misskey.io/@n@mi.0il.pw" target="_blank" rel="noopener noreferrer">
               <i className="icon fas fa-at"></i>
 							n@mi.0il.pw
-            </a>
-          </div>
-          <div className="menu large">
-            <a className="item" href="//zzlq.0il.pw/@ne" target="_blank" rel="noopener noreferrer">
-              <i className="icon fas fa-at"></i>
-							ne@zzlq.0il.pw
             </a>
           </div>
         </section>
