@@ -105,9 +105,9 @@ const logNotesCount = (username: string, notesCount: number) => {
 
 const checkAndDeleteUser = async (user: User) => {
   for (const [username, noteLogs] of userNoteLogs.entries()) {
-    if (noteLogs.length === 7 && noteLogs.every((count, index, arr) => index === 0 || count === arr[index - 1] + 1)) {
+    if (noteLogs.length === 7 && noteLogs.every((count, index, arr) => index === 0 || count <= arr[index - 1])) {
       await deleteUser(user.username, user.host);
-      printLog(`User ${username} deleted due to low activity.`);
+      printLog(`User ${username} deleted due to no activity.`);
     }
   }
 };
