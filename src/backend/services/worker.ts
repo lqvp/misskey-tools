@@ -163,6 +163,7 @@ const sendAlerts = async (host: string, users: User[]) => {
                 await deleteUser(user.username, user.host);
             } else if (e instanceof MisskeyError && e.error.code === 'CONTAINS_TOO_MANY_MENTIONS') {
                 printLog(`Account ${toAcct(user)} has too many mentions. Skipping.`, 'warn');
+								await sendNotificationAlert("エラー: ノートを送信することが出来るませんでした。あなたのアカウントに設定されてるテンプレートがロールに割り当てられているメンション数を超えています。", user);
                 continue;
             } else {
                 throw e;
