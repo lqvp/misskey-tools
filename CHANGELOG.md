@@ -1,3 +1,8 @@
+## 3.3.1-lqvp
+* CONTAINS_TOO_MANY_MENTIONSが出るユーザーにエラーの通知を送るように
+* 7日連続でノート増加数が無い放置ユーザーに通知を送るように
+* neo-quesdonへのリンクを設置
+
 ## 3.3.0-lqvp
 * 移行されたアカウントを自動的に削除するように
 * CONTAINS_TOO_MANY_MENTIONSが出るユーザーを無視するように
