@@ -108,6 +108,7 @@ const checkAndDeleteUser = async (user: User) => {
     if (noteLogs.length === 7 && noteLogs.every((count, index, arr) => index === 0 || count <= arr[index - 1])) {
       await deleteUser(user.username, user.host);
       printLog(`User ${username} deleted due to no activity.`);
+			await sendNotificationAlert("あなたのアカウントは7日間0ノートだった為misskey toolsのシステムから削除されました。", user);
     }
   }
 };
