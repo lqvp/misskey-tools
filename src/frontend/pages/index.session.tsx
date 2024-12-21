@@ -69,6 +69,12 @@ export const IndexSessionPage: React.VFC = () => {
 							n@mi.0il.pw
             </a>
           </div>
+					<div className="menu large">
+            <a className="item" href="https://neo-quesdon.0il.pw/main/user/@n@mi.0il.pw" target="_blank" rel="noopener noreferrer">
+              <i className="icon fas fa-paper-plane"></i>
+							{t('_developerInfo.contact')}
+            </a>
+          </div>
         </section>
       </div>
     </article>

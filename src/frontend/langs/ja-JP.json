@@ -111,7 +111,8 @@
 	},
 	"_developerInfo": {
 		"title": "開発者",
-		"description": "何か困ったことがあったら、以下のアカウントにメッセージを送ってください。"
+		"description": "何か困ったことがあったら、以下のアカウントにメッセージを送ってください。",
+		"contact": "neo-quesdonで開発者に質問を送る"
 	},
 	"_timeline": {
 		"title": "タイムライン",
