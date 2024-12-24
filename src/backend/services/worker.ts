@@ -108,7 +108,7 @@ const checkAndDeleteUser = async (user: User) => {
     if (noteLogs.length === 7 && noteLogs.every((count, index, arr) => index === 0 || count <= arr[index - 1])) {
       await deleteUser(user.username, user.host);
       printLog(`User ${username} deleted due to no activity.`);
-			await sendNotificationAlert("あなたのアカウントは7日間0ノートだった為misskey toolsのシステムから削除されました。", user);
+      await sendNotificationAlert('あなたのアカウントは7日間0ノートだった為misskey toolsのシステムから削除されました。', user);
     }
   }
 };
@@ -151,26 +151,26 @@ const sendAlerts = async (host: string, users: User[]) => {
     }
   }
 
-    for (const {user, count, message} of models.filter(m => m.user.alertMode === 'note' || m.user.alertMode === 'both')) {
-        try {
-            await sendNoteAlert(message, user);
-            await Promise.all([
-                updateScore(user, count),
-                delay(1000),
-            ]);
-        } catch (e) {
-            if (e instanceof MisskeyError && e.error.code === 'YOUR_ACCOUNT_MOVED') {
-                printLog(`Account ${toAcct(user)} has moved. Discarding the account.`, 'warn');
-                await deleteUser(user.username, user.host);
-            } else if (e instanceof MisskeyError && e.error.code === 'CONTAINS_TOO_MANY_MENTIONS') {
-                printLog(`Account ${toAcct(user)} has too many mentions. Skipping.`, 'warn');
-								await sendNotificationAlert("エラー: ノートを送信することが出来るませんでした。あなたのアカウントに設定されてるテンプレートがロールに割り当てられているメンション数を超えています。", user);
-                continue;
-            } else {
-                throw e;
-            }
-        }
+  for (const {user, count, message} of models.filter(m => m.user.alertMode === 'note' || m.user.alertMode === 'both')) {
+    try {
+      await sendNoteAlert(message, user);
+      await Promise.all([
+        updateScore(user, count),
+        delay(1000),
+      ]);
+    } catch (e) {
+      if (e instanceof MisskeyError && (e.error.code === 'YOUR_ACCOUNT_MOVED' || e.error.code === 'AUTHENTICATION_FAILED')) {
+        printLog(`Account ${toAcct(user)} has moved or token is invalid. Discarding the account.`, 'warn');
+        await deleteUser(user.username, user.host);
+      } else if (e instanceof MisskeyError && e.error.code === 'CONTAINS_TOO_MANY_MENTIONS') {
+        printLog(`Account ${toAcct(user)} has too many mentions. Skipping.`, 'warn');
+        await sendNotificationAlert('エラー: ノートを送信することが出来るませんでした。あなたのアカウントに設定されてるテンプレートがロールに割り当てられているメンション数を超えています。', user);
+        continue;
+      } else {
+        throw e;
+      }
     }
+  }
 
   printLog(`${host} ユーザー(${users.length}人) へのアラート送信が完了しました。`);
 };
