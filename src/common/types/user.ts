@@ -21,5 +21,6 @@ export interface IUser {
   isAdmin?: boolean;
   tokenVersion: number;
   useRanking: boolean;
+	noteLogs: number[];
 }
 
