@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import i18n from 'i18next';
@@ -31,4 +31,6 @@ i18n
     }
   });
 
-ReactDOM.render(<App/>, document.getElementById('app'));
+const container = document.getElementById('app');
+const root = createRoot(container!);
+root.render(<App />);
