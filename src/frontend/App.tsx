@@ -1,4 +1,4 @@
-import React, { useEffect, useState, FC } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Link, useLocation } from 'react-router-dom';
 import { Provider, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +14,7 @@ import { GeneralLayout } from './GeneralLayout';
 import {$get} from './misc/api';
 import {IUser} from '../common/types/user';
 
-const AppInner : FC = () => {
+const AppInner : React.VFC = () => {
   const { data: session } = useGetSessionQuery(undefined);
   const $location = useLocation();
 
@@ -82,7 +82,7 @@ const AppInner : FC = () => {
   );
 };
 
-export const App: FC = () => (
+export const App: React.VFC = () => (
   <Provider store={store}>
     <BrowserRouter>
       <AppInner />
