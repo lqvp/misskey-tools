@@ -19,7 +19,6 @@ const ERROR_CODES_USER_REMOVED = ['NO_SUCH_USER', 'AUTHENTICATION_FAILED', 'YOUR
 
 // TODO: Redisで持つようにしたい
 const userScoreCache = new Map<Acct, Count>();
-const userNoteLogs = new Map<string, number[]>();
 
 export default (): void => {
   cron.schedule('0 0 0 * * *', work);
@@ -84,31 +83,25 @@ const calculateRating = async (host: string, users: User[]) => {
 
     await updateRating(user, miUser);
 
-    // Log notesCount daily
-    logNotesCount(user.username, miUser.notesCount);
+    // Update noteLogs in database
+    const newLogs = [miUser.notesCount, ...(user.noteLogs || [])].slice(0, 3);
+    await Users.update(user.id, { noteLogs: newLogs });
   }
   printLog(`${host} ユーザー(${users.length}人) のレート計算が完了しました。`);
 };
 
-const logNotesCount = (username: string, notesCount: number) => {
-  if (!userNoteLogs.has(username)) {
-    userNoteLogs.set(username, []);
-  }
-  const noteLogs = userNoteLogs.get(username);
-  if (noteLogs) {
-    noteLogs.push(notesCount);
-    if (noteLogs.length > 7) {
-      noteLogs.shift(); // Keep only the last 7 days
-    }
-  }
-};
+const checkAndDeleteInactiveUsers = async (user: User) => {
+  // Check if we have 3 days of logs
+  if (user.noteLogs.length === 3) {
+    // Check if note count hasn't increased for 3 days
+    const hasIncreased = user.noteLogs.some((count, index, arr) =>
+      index > 0 && count > arr[index - 1]
+    );
 
-const checkAndDeleteUser = async (user: User) => {
-  for (const [username, noteLogs] of userNoteLogs.entries()) {
-    if (noteLogs.length === 7 && noteLogs.every((count, index, arr) => index === 0 || count <= arr[index - 1])) {
+    if (!hasIncreased) {
       await deleteUser(user.username, user.host);
-      printLog(`User ${username} deleted due to no activity.`);
-      await sendNotificationAlert('あなたのアカウントは7日間0ノートだった為misskey toolsのシステムから削除されました。', user);
+      printLog(`User ${user.username} deleted due to no activity for 3 days.`);
+      await sendNotificationAlert('あなたのアカウントは3日間ノート数が増加しなかった為、misskey toolsのシステムから削除されました。', user);
     }
   }
 };
@@ -175,10 +168,10 @@ const sendAlerts = async (host: string, users: User[]) => {
   printLog(`${host} ユーザー(${users.length}人) へのアラート送信が完了しました。`);
 };
 
-// Schedule the task to check and delete users daily
+// Update the cron schedule to check inactive users
 cron.schedule('0 0 * * *', async () => {
   const users = await Users.find();
   for (const user of users) {
-    await checkAndDeleteUser(user);
+    await checkAndDeleteInactiveUsers(user);
   }
 });

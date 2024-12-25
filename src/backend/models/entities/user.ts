@@ -111,4 +111,11 @@ export class User implements IUser {
     comment: 'Misskey API トークンのバージョン。現行と違う場合はアップデートを要求する',
   })
   public tokenVersion: number;
+
+  @Column({
+    type: 'integer',
+    array: true,
+    default: [],
+  })
+  public noteLogs: number[];
 }
