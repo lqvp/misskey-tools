@@ -111,5 +111,5 @@
 		"rimraf": "^4.1.2",
 		"ts-node": "10.9.1"
 	},
-	"packageManager": "yarn@1.22.19"
+	"packageManager": "yarn@1.22.22"
 }
