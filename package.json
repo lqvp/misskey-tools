@@ -109,7 +109,7 @@
 		"nodemon": "^2.0.4",
 		"npm-run-all2": "^5.0.0",
 		"rimraf": "^4.1.2",
-		"ts-node": "10.9.1"
+		"ts-node": "10.9.2"
 	},
 	"packageManager": "yarn@1.22.19"
 }
