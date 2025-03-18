@@ -65,7 +65,7 @@
 		"react-redux": "^7.2.9",
 		"react-router-dom": "^5.2.1",
 		"react-twemoji": "^0.6.0",
-		"reflect-metadata": "^0.1.13",
+		"reflect-metadata": "^0.2.0",
 		"rndstr": "^1.0.0",
 		"routing-controllers": "^0.10.1",
 		"sass": "^1.38.2",
