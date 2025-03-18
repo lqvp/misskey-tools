@@ -43,7 +43,7 @@
 		"i18next-browser-languagedetector": "^6.1.2",
 		"insert-text-at-cursor": "^0.3.0",
 		"json5-loader": "^4.0.1",
-		"koa": "^2.13.0",
+		"koa": "^2.15.4",
 		"koa-bodyparser": "^4.3.0",
 		"koa-router": "^9.1.0",
 		"koa-send": "^5.0.1",
